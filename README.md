@@ -60,3 +60,154 @@ After fixing permissions, try running:
 
 python manage.py migrate
 
+-----------------------------------------------
+
+https://43.204.238.24:9443
+
+http://43.204.238.24:8080
+
+
+
+docker run -d --name django_db -p 3306:3306 -e MYSQL_ROOT_PASSWORD=admin  mysql
+
+MYSQL_ROOT_PASSWORD : admin
+
+MYSQL_DATABASE : test_db
+
+MYSQL_USER : root
+
+MYSQL_PASSWORD : admin
+
+MYSQL_ALLOW_EMPTY_PASSWORD
+
+MYSQL_RANDOM_ROOT_PASSWORD
+
+---------------------------
+MYSQL_USER : root
+
+MYSQL_PASSWORD : admin
+
+MYSQL_DATABASE : test_db
+
+CREATE DATABASE test_db;
+
+USE test_db;
+
+mysql -u root -p
+
+mysql -h 172.17.0.3 -P 3306 -u root -p
+
+---------------------------
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'test_db',           # your MySQL database name
+        'USER': 'root',         # your MySQL username
+        'PASSWORD': 'admin',     # your MySQL password
+        'HOST': '127.0.0.1',            # or 'db' if using Docker Compose service name
+        'PORT': '3306',                 # default MySQL port
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
+    }
+}
+
+-----------------------------
+
+docker run -d \
+  --name django_db \
+  -p 3306:3306 \
+  -e MYSQL_ROOT_PASSWORD=admin \
+  -e MYSQL_DATABASE=test_db \
+  -e MYSQL_USER=django_user \
+  -e MYSQL_PASSWORD=django_pass \
+  mysql
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'test_db',
+        'USER': 'django_user',
+        'PASSWORD': 'django_pass',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
+    }
+}
+
+-------------------------------
+
+ubuntu@ip-172-31-3-91:~/django_docker_project$ cat Dockerfile
+# ---------- Builder ----------
+FROM python:3.12-slim AS builder
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
+
+# Build tools + headers only in builder
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+      build-essential \
+      gcc \
+      libpq-dev \
+ && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY requirements.txt /app/
+
+# Build wheels for all dependencies
+RUN pip install --upgrade pip wheel \
+ && pip wheel --wheel-dir /wheels -r requirements.txt
+
+# If executable.sh builds assets (e.g., collectstatic/webpack), run here:
+# COPY . /app
+# RUN chmod +x ./executable.sh && ./executable.sh
+# and then copy only the produced artifacts in the runtime stage.
+
+
+# ---------- Runtime ----------
+FROM python:3.12-slim AS runtime
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
+
+# Only runtime libs
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+      libpq5 \
+ && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Install from prebuilt wheels (no compilers in final image)
+COPY --from=builder /wheels /wheels
+RUN pip install --no-cache-dir /wheels/* \
+ && rm -rf /wheels
+
+# Copy app code last for better caching
+COPY --chown=10001:10001 . /app
+
+# If executable.sh only prepares runtime artifacts, keep it in builder instead.
+# If it must be run at runtime image, do:
+# RUN chmod +x ./executable.sh && ./executable.sh
+
+RUN useradd -u 10001 -M -s /usr/sbin/nologin test
+
+RUN chmod +x ./executable.sh && ./executable.sh
+
+USER 10001
+
+EXPOSE 8000
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+--------------- Error ------------------------
+
+#!/bin/sh
+python manage.py makemigrations --noinput
+python manage.py migrate --noinput
+python manage.py collectstatic --noinput
+exec "$@"
+

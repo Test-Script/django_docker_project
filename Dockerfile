@@ -5,12 +5,13 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1
 
-# Build tools + headers only in builder
+# Build tools + MySQL headers for mysqlclient
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
       build-essential \
       gcc \
-      libpq-dev \
+      default-libmysqlclient-dev \
+      pkg-config \
  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -21,11 +22,6 @@ COPY requirements.txt /app/
 RUN pip install --upgrade pip wheel \
  && pip wheel --wheel-dir /wheels -r requirements.txt
 
-# If executable.sh builds assets (e.g., collectstatic/webpack), run here:
-# COPY . /app
-# RUN chmod +x ./executable.sh && ./executable.sh
-# and then copy only the produced artifacts in the runtime stage.
-
 
 # ---------- Runtime ----------
 FROM python:3.12-slim AS runtime
@@ -34,15 +30,15 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1
 
-# Only runtime libs
+# Runtime MySQL client libs only (no compilers, no headers)
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
-      libpq5 \
+      default-libmysqlclient-dev \
  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Install from prebuilt wheels (no compilers in final image)
+# Install from prebuilt wheels
 COPY --from=builder /wheels /wheels
 RUN pip install --no-cache-dir /wheels/* \
  && rm -rf /wheels
@@ -50,13 +46,14 @@ RUN pip install --no-cache-dir /wheels/* \
 # Copy app code last for better caching
 COPY --chown=10001:10001 . /app
 
-# If executable.sh only prepares runtime artifacts, keep it in builder instead.
-# If it must be run at runtime image, do:
-# RUN chmod +x ./executable.sh && ./executable.sh
-
 RUN useradd -u 10001 -M -s /usr/sbin/nologin test
+#RUN chmod +x ./executable.sh && ./executable.sh
 
-RUN chmod +x ./executable.sh && ./executable.sh
+COPY ./executable.sh /app/executable.sh
+
+RUN chmod +x /app/executable.sh
+
+ENTRYPOINT ["/app/executable.sh"]
 
 USER 10001
 
