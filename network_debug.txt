@@ -1,0 +1,166 @@
+http://13.233.159.18:8181
+
+
+ubuntu@ip-172-31-3-91:~/django_docker_project$ sudo tcpdump -i br-47a81d66cca4
+tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+listening on br-47a81d66cca4, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+18:15:11.698490 IP 42.104.226.3.46124 > ip-172-20-0-4.ap-south-1.compute.internal.8000: Flags [P.], seq 2738936059:2738936574, ack 2663206584, win 171, options [nop,nop,TS val 1534395158 ecr 1214905447], length 515
+18:15:11.698524 IP ip-172-20-0-4.ap-south-1.compute.internal.8000 > 42.104.226.3.46124: Flags [.], ack 515, win 506, options [nop,nop,TS val 1214936645 ecr 1534395158], length 0
+18:15:11.713232 IP ip-172-20-0-4.ap-south-1.compute.internal.8000 > 42.104.226.3.46124: Flags [P.], seq 1:18, ack 515, win 506, options [nop,nop,TS val 1214936660 ecr 1534395158], length 17
+18:15:11.771192 IP 42.104.226.3.46124 > ip-172-20-0-4.ap-south-1.compute.internal.8000: Flags [.], ack 18, win 171, options [nop,nop,TS val 1534395262 ecr 1214936660], length 0
+18:15:11.771216 IP ip-172-20-0-4.ap-south-1.compute.internal.8000 > 42.104.226.3.46124: Flags [P.], seq 18:316, ack 515, win 506, options [nop,nop,TS val 1214936718 ecr 1534395262], length 298
+18:15:11.830895 IP 42.104.226.3.46124 > ip-172-20-0-4.ap-south-1.compute.internal.8000: Flags [.], ack 316, win 173, options [nop,nop,TS val 1534395330 ecr 1214936718], length 0
+
+
+ubuntu@ip-172-31-3-91:~/django_docker_project$ sudo tcpdump -i br-47a81d66cca4
+tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+listening on br-47a81d66cca4, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+18:20:20.446585 IP 42.104.226.45.50602 > ip-172-20-0-4.ap-south-1.compute.internal.8000: Flags [P.], seq 581860201:581860713, ack 1213954716, win 171, options [nop,nop,TS val 2728356211 ecr 3944336752], length 512
+18:20:20.446629 IP ip-172-20-0-4.ap-south-1.compute.internal.8000 > 42.104.226.45.50602: Flags [.], ack 512, win 506, options [nop,nop,TS val 3944352907 ecr 2728356211], length 0
+18:20:20.454384 IP ip-172-20-0-4.ap-south-1.compute.internal.8000 > 42.104.226.45.50602: Flags [P.], seq 1:18, ack 512, win 506, options [nop,nop,TS val 3944352915 ecr 2728356211], length 17
+18:20:20.476554 IP 42.104.226.45.50602 > ip-172-20-0-4.ap-south-1.compute.internal.8000: Flags [.], ack 18, win 171, options [nop,nop,TS val 2728356301 ecr 3944352915], length 0
+18:20:20.476581 IP ip-172-20-0-4.ap-south-1.compute.internal.8000 > 42.104.226.45.50602: Flags [P.], seq 18:316, ack 512, win 506, options [nop,nop,TS val 3944352937 ecr 2728356301], length 298
+18:20:20.601577 IP 42.104.226.45.50602 > ip-172-20-0-4.ap-south-1.compute.internal.8000: Flags [.], ack 316, win 173, options [nop,nop,TS val 2728356319 ecr 3944352937], length 0
+18:20:25.803221 ARP, Request who-has ip-172-20-0-4.ap-south-1.compute.internal tell ip-172-20-0-1.ap-south-1.compute.internal, length 28
+18:20:25.803248 ARP, Reply ip-172-20-0-4.ap-south-1.compute.internal is-at 4e:8a:12:36:fd:f3 (oui Unknown), length 28
+
+ubuntu@ip-172-31-3-91:~/django_docker_project$ sudo tcpdump -i br-bd59201ba794
+tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+listening on br-bd59201ba794, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+18:28:38.815975 IP 42.104.226.154.10566 > ip-172-20-0-4.ap-south-1.compute.internal.8000: Flags [P.], seq 3893578672:3893579184, ack 1992123828, win 175, options [nop,nop,TS val 2728506332 ecr 314690823], length 512
+18:28:38.816679 IP ip-172-20-0-4.ap-south-1.compute.internal.8000 > 42.104.226.154.10566: Flags [P.], seq 1:18, ack 512, win 501, options [nop,nop,TS val 314695293 ecr 2728506332], length 17
+18:28:38.846044 IP 42.104.226.154.10566 > ip-172-20-0-4.ap-south-1.compute.internal.8000: Flags [.], ack 18, win 175, options [nop,nop,TS val 2728506373 ecr 314695293], length 0
+18:28:38.846065 IP ip-172-20-0-4.ap-south-1.compute.internal.8000 > 42.104.226.154.10566: Flags [P.], seq 18:382, ack 512, win 501, options [nop,nop,TS val 314695322 ecr 2728506373], length 364
+18:28:38.886427 IP 42.104.226.154.10566 > ip-172-20-0-4.ap-south-1.compute.internal.8000: Flags [.], ack 382, win 177, options [nop,nop,TS val 2728506404 ecr 314695322], length 0
+18:28:39.371217 ARP, Request who-has ip-172-20-0-4.ap-south-1.compute.internal tell ip-172-20-0-1.ap-south-1.compute.internal, length 28
+18:28:39.371258 ARP, Reply ip-172-20-0-4.ap-south-1.compute.internal is-at 9e:6c:ea:40:69:af (oui Unknown), length 28
+
+
+ubuntu@ip-172-31-3-91:~/django_docker_project$ sudo tcpdump -i br-bd59201ba794
+tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+listening on br-bd59201ba794, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+18:29:41.960846 IP 223.185.36.18.16011 > ip-172-20-0-4.ap-south-1.compute.internal.8000: Flags [S], seq 2469255933, win 65535, options [mss 1250,nop,wscale 8,nop,nop,sackOK], length 0
+18:29:41.960875 IP ip-172-20-0-4.ap-south-1.compute.internal.8000 > 223.185.36.18.16011: Flags [S.], seq 1900928035, ack 2469255934, win 64240, options [mss 1460,nop,nop,sackOK,nop,wscale 7], length 0
+18:29:42.150453 IP 223.185.36.18.16011 > ip-172-20-0-4.ap-south-1.compute.internal.8000: Flags [.], ack 1, win 255, length 0
+18:29:42.150462 IP 223.185.36.18.16011 > ip-172-20-0-4.ap-south-1.compute.internal.8000: Flags [P.], seq 1:1020, ack 1, win 255, length 1019
+18:29:42.150500 IP ip-172-20-0-4.ap-south-1.compute.internal.8000 > 223.185.36.18.16011: Flags [.], ack 1020, win 494, length 0
+18:29:42.151487 IP ip-172-20-0-4.ap-south-1.compute.internal.8000 > 223.185.36.18.16011: Flags [P.], seq 1:18, ack 1020, win 494, length 17
+18:29:42.240942 IP 223.185.36.18.16011 > ip-172-20-0-4.ap-south-1.compute.internal.8000: Flags [.], ack 18, win 255, length 0
+18:29:42.240969 IP ip-172-20-0-4.ap-south-1.compute.internal.8000 > 223.185.36.18.16011: Flags [P.], seq 18:382, ack 1020, win 494, length 364
+18:29:42.341002 IP 223.185.36.18.16011 > ip-172-20-0-4.ap-south-1.compute.internal.8000: Flags [.], ack 382, win 254, length 0
+
+
+ubuntu@ip-172-31-3-91:~/django_docker_project$ sudo tcpdump -i br-bd59201ba794
+tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+listening on br-bd59201ba794, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+18:30:31.755734 IP 223.185.36.18.16011 > ip-172-20-0-4.ap-south-1.compute.internal.8000: Flags [P.], seq 2469256953:2469257972, ack 1900928417, win 254, length 1019
+18:30:31.755926 IP ip-172-20-0-4.ap-south-1.compute.internal.8000 > 223.185.36.18.16011: Flags [.], ack 1019, win 487, length 0
+18:30:31.758393 IP ip-172-20-0-4.ap-south-1.compute.internal.8000 > 223.185.36.18.16011: Flags [P.], seq 1:18, ack 1019, win 487, length 17
+18:30:31.856012 IP 223.185.36.18.16011 > ip-172-20-0-4.ap-south-1.compute.internal.8000: Flags [.], ack 18, win 254, length 0
+18:30:31.856049 IP ip-172-20-0-4.ap-south-1.compute.internal.8000 > 223.185.36.18.16011: Flags [P.], seq 18:382, ack 1019, win 487, length 364
+18:30:31.960992 IP 223.185.36.18.16011 > ip-172-20-0-4.ap-south-1.compute.internal.8000: Flags [.], ack 382, win 253, length 0
+18:30:32.523236 ARP, Request who-has ip-172-20-0-4.ap-south-1.compute.internal tell ip-172-20-0-1.ap-south-1.compute.internal, length 28
+18:30:32.523269 ARP, Reply ip-172-20-0-4.ap-south-1.compute.internal is-at 9e:6c:ea:40:69:af (oui Unknown), length 28
+
+----------------------------------------------------------------
+
+Here’s what’s happening in your **`tcpdump`** capture on interface `br-47a81d66cca4` (a Docker bridge network):
+
+---
+
+### 🔍 **Breakdown of Key Lines**
+
+#### 1. **TCP Communication**
+
+```
+18:20:20.446585 IP 42.104.226.45.50602 > ip-172-20-0-4.ap-south-1.compute.internal.8000: Flags [P.], seq ..., length 512
+```
+
+* **Source:** `42.104.226.45` (likely your external client, e.g., browser or API call from outside)
+* **Destination:** `ip-172-20-0-4.ap-south-1.compute.internal:8000` (your Django container)
+* **Port 8000:** Django’s default development server port
+* **Flags [P.]**: Push + ACK — means this packet contains data being sent to the Django app.
+
+So:
+👉 A client (`42.104.226.45`) is sending a request to your Django container.
+
+---
+
+#### 2. **Server Acknowledgment**
+
+```
+18:20:20.446629 IP ip-172-20-0-4... > 42.104.226.45...: Flags [.], ack 512
+```
+
+* The Django container (at 172.20.0.4) is **acknowledging receipt** of the 512 bytes.
+* `[.]` means an ACK without data.
+
+---
+
+#### 3. **Server Response**
+
+```
+18:20:20.454384 IP ip-172-20-0-4... > 42.104.226.45...: Flags [P.], seq 1:18, ack 512, length 17
+```
+
+* Django container sends a **response** of 17 bytes.
+* That’s likely an **HTTP header or short message**.
+
+---
+
+#### 4. **Further Acknowledgments**
+
+Subsequent lines show more small chunks of data and acknowledgments — the typical TCP exchange during a web request-response.
+
+---
+
+#### 5. **ARP Requests**
+
+```
+18:20:25.803221 ARP, Request who-has ip-172-20-0-4 tell ip-172-20-0-1
+18:20:25.803248 ARP, Reply ip-172-20-0-4 is-at 4e:8a:12:36:fd:f3
+```
+
+* **Docker bridge network internal communication.**
+* `ip-172-20-0-1` (Docker gateway) is asking who owns `ip-172-20-0-4`.
+* The container responds with its MAC address (`4e:8a:12:36:fd:f3`).
+
+---
+
+### 🧠 **Interpretation**
+
+Everything looks **normal** — your Django container (`172.20.0.4`) is:
+
+* Receiving traffic from an external client (`42.104.226.45`).
+* Responding normally.
+* Connected via Docker bridge (`br-47a81d66cca4`).
+
+So your **Docker networking is functioning**, and **requests are reaching your Django app** successfully.
+
+---
+
+### 🧰 **Useful tcpdump Tips**
+
+If you want to analyze this further:
+
+#### Show only HTTP traffic
+
+```bash
+sudo tcpdump -i br-47a81d66cca4 tcp port 8000 -A
+```
+
+→ Shows readable ASCII output (good for HTTP headers).
+
+#### Capture only packets between client and Django container
+
+```bash
+sudo tcpdump -i br-47a81d66cca4 host 42.104.226.45 and port 8000
+```
+
+#### Save capture for Wireshark
+
+```bash
+sudo tcpdump -i br-47a81d66cca4 -w django_traffic.pcap
+```
+
+---
