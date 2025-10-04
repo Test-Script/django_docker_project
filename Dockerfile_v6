@@ -1,0 +1,60 @@
+# ---------- Builder ----------
+FROM registry.access.redhat.com/ubi9/python-312:latest AS builder
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
+
+USER root
+# Install build dependencies
+RUN dnf install -y gcc make mariadb-connector-c-devel pkg-config && dnf clean all
+
+# Create writable directory for wheels
+RUN mkdir -p /wheels && chmod 777 /wheels
+#USER 1001
+
+WORKDIR /app
+COPY requirements.txt /app/
+
+# Build wheels for all dependencies
+RUN python3 -m pip install --upgrade pip wheel \
+ && python3 -m pip wheel --wheel-dir /wheels -r requirements.txt
+
+
+# ---------- Runtime ----------
+FROM registry.access.redhat.com/ubi9/python-312:latest AS runtime
+
+USER root
+# Install runtime dependencies
+RUN dnf install -y mariadb-connector-c-devel && dnf clean all
+#USER 1001
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
+
+WORKDIR /app
+
+# Copy wheels from builder
+COPY --from=builder /wheels /wheels
+
+# Temporarily elevate for install + cleanup
+USER root
+RUN python3 -m pip install --no-cache-dir /wheels/* && rm -rf /wheels
+#USER 1001
+
+# Copy project files
+COPY --chown=10001:10001 . /app
+
+USER root
+#RUN useradd -u 10001 -M -s /usr/sbin/nologin test
+#USER 10001
+
+COPY ./executable.sh /app/executable.sh
+
+# Copy executable script with proper permissions
+COPY --chmod=755 ./executable.sh /app/executable.sh
+
+ENTRYPOINT ["/app/executable.sh"]
+EXPOSE 8000
+CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
