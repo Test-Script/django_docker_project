@@ -19,5 +19,6 @@ from django.urls import path
 from Application.views import home
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', home, name='home'),  # Root URL
+#    path('', home, name='home'),  # Root URL
+    path('', include('Application.urls')),
 ]
