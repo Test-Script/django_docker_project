@@ -1,4 +1,4 @@
-# ---------- Builder ----------
+# ---------- Builder With Universal Base Image of Red_hat ----------
 FROM registry.access.redhat.com/ubi9/python-312:latest AS builder
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
