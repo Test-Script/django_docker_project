@@ -5,4 +5,4 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 def home(request):
-    return HttpResponse("<h1> Testing the request-responce behavious of contianer communication between client & server</h1>")
+    return HttpResponse("<h1> CICD Pipeline is Creating & It is in Testing</h1>")

@@ -1,0 +1,173 @@
+http://3.109.201.238:8181 : Django URL
+
+http://3.109.201.238:8080/ : jenkins URL
+
+https://localhost:9443 : Portainer URL
+
+===================================
+
+Tejas_108 : username
+
+adminadminadmin : password
+
+
+/home/ubuntu/Jenkins_volume : Docker local host file location
+
+/var/lib/docker/volumes/data_volume/_data : Docker Host file location
+
+/var/data_volume/django_docker_project : Container location
+
+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
+
+=================================== jenkins file permission changing & debugging ================
+
+Perfect — now this error makes the situation crystal clear ✅
+
+You’ve fixed the path, but now Jenkins says:
+
+```
+ERROR: failed to build: resolve : lstat /home/ubuntu/django_docker_project: permission denied
+```
+
+---
+
+## 🧠 What’s Happening
+
+Jenkins is running directly on the host (not in Docker),
+but it runs as the **`jenkins` user**, not as your `ubuntu` user.
+
+So when Jenkins executes:
+
+```bash
+docker build -t application -f /home/ubuntu/django_docker_project/Dockerfile_v6 .
+```
+
+it tries to **read `/home/ubuntu/django_docker_project`**, but:
+
+* The folder belongs to `ubuntu`,
+* The `jenkins` user has **no permission** to read it.
+
+---
+
+## ✅ Fix Options
+
+---
+
+### 🥇 **Option 1: Fix Folder Permissions (Best & Easiest)**
+
+Run this on your VM as `ubuntu` or `root`:
+
+```bash
+sudo chmod -R 755 /home/ubuntu/django_docker_project
+sudo chown -R jenkins:jenkins /home/ubuntu/django_docker_project
+```
+
+This ensures Jenkins can read the folder and all its contents.
+
+Then re-run your Jenkins job.
+
+✅ **Works immediately.**
+
+---
+
+### 🧠 Why both?
+
+* `chmod 755` → allows “read + execute” for others.
+* `chown` → ensures ownership (optional but cleaner).
+
+---
+
+### 🧩 **Option 2: Copy or Link Files into Jenkins Workspace**
+
+If you don’t want to change ownership:
+
+```bash
+sudo cp -r /home/ubuntu/django_docker_project /var/lib/jenkins/workspace/Test/
+```
+
+Then update your Jenkinsfile:
+
+```groovy
+sh '''
+    docker build -t application -f django_docker_project/Dockerfile_v6 django_docker_project
+'''
+```
+
+✅ Jenkins fully owns `/var/lib/jenkins/workspace/Test` — no permission issues.
+
+---
+
+### 🧰 **Option 3: Add Jenkins User to the Ubuntu User Group**
+
+If `/home/ubuntu/django_docker_project` is owned by the `ubuntu` group:
+
+```bash
+ls -ld /home/ubuntu/django_docker_project
+```
+
+If it shows:
+
+```
+drwx------  ubuntu ubuntu ...
+```
+
+you can add `jenkins` to the `ubuntu` group:
+
+```bash
+sudo usermod -aG ubuntu jenkins
+```
+
+Then **restart Jenkins**:
+
+```bash
+sudo systemctl restart jenkins
+```
+
+✅ Jenkins will now have access via group permissions.
+
+---
+
+### ⚠️ Important Security Note
+
+Avoid using `chmod 777` — it’s insecure.
+Use `755` or `775` depending on your setup.
+
+---
+
+### ✅ Recommended Clean Setup
+
+If you want a consistent setup where Jenkins can always access your project code:
+
+1. Place your project in `/var/lib/jenkins/workspace/`
+2. Or clone it from Git directly in your pipeline:
+
+   ```groovy
+   stage('Checkout') {
+       steps {
+           git branch: 'main', url: 'https://github.com/your-repo.git'
+       }
+   }
+   ```
+
+Then:
+
+```groovy
+stage('Build') {
+    steps {
+        sh 'docker build -t application -f Dockerfile_v6 .'
+    }
+}
+```
+
+---
+
+Would you like me to give you the **exact commands** to fix permissions (based on your current file ownership)?
+If you run:
+
+```bash
+ls -ld /home/ubuntu/django_docker_project
+```
+
+and paste the output here, I’ll tell you the safest one-liner fix.
+
+==================================================================================
