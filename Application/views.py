@@ -5,4 +5,4 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 def home(request):
-    return HttpResponse("<h1>This is for checking Nginx Traffic</h1>")
+    return HttpResponse("<h1>Checking is webhook working properly</h1>")
