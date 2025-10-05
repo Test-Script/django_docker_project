@@ -1,11 +1,13 @@
 #!/bin/bash
 
-#chown test:test /app/db.sqlite3
-#chown test:test /app
-#chmod 664 /app/db.sqlite3
-#chmod 775 /app
-
+echo "Running migrations..."
 python3 manage.py makemigrations --noinput
+
+echo "Running Migrations..."
 python3 manage.py migrate --noinput
+
+echo "Collecting static files..."
 python3 manage.py collectstatic --noinput
-exec "$@"
+
+echo "Starting Gunicorn..."
+exec gunicorn --bind 0.0.0.0:8000 test_project.wsgi:application

@@ -1,4 +1,4 @@
-# ---------- Builder ----------
+# ---------- Builder With Python Slim Image----------
 FROM python:3.12-slim AS builder
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -53,10 +53,12 @@ COPY ./executable.sh /app/executable.sh
 
 RUN chmod +x /app/executable.sh
 
-ENTRYPOINT ["/app/executable.sh"]
+#ENTRYPOINT ["/app/executable.sh"]
 
 USER 10001
 
 EXPOSE 8000
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+ENTRYPOINT ["/app/executable.sh"]
+#CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 

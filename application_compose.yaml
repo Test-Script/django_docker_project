@@ -13,6 +13,17 @@ services:
       app_net:
         ipv4_address: 172.20.0.4
 
+  nginx:
+    image: nginx:latest
+    container_name: nginx_proxy
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - app
+    networks:
+      app_net:
+        ipv4_address: 172.20.0.5
   db:
     image: mysql:latest
     container_name: django_db
